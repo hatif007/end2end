@@ -2,7 +2,7 @@
 
 Simple Python Flask application.
 
-The application listens on port 8080.
+The application listens on port 8082.
 
 Run locally:
 
