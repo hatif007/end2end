@@ -1,24 +1,36 @@
-pipeline {
-    agent any
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-                // Build steps here
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-                // Test steps here
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                // Deploy steps here
-            }
-        }
+def appname = "hello-newapp"
+def repo = "hatif007"  // Replace with your DockerHub username
+def appimage = "docker.io/${repo}/${appname}"
+def apptag = "${env.BUILD_NUMBER}"
+
+podTemplate(cloud: 'kubernetes', containers: [
+    containerTemplate(
+        name: 'jnlp', 
+        image: 'jenkins/inbound-agent:latest'
+    ),
+     containerTemplate(
+        name: 'docker', 
+        image: 'docker:26-dind', // Use the latest stable DinD image
+        privileged: true,      // Essential for Docker daemon to run
+        args: '--storage-driver=vfs' // VFS is safest for K8s, though slower
+    )], 
+  volumes: [
+    emptyDirVolume(mountPath: '/var/lib/docker', memory: false) // Q: Why do we need this volume?
+  ]) {
+    node(POD_LABEL) {
+        stage('chackout') {
+            container('jnlp') {
+            sh '/usr/bin/git config --global http.sslVerify false'
+	    checkout scm
+          }
+        } // end chackout
+
+       stage('build') {
+    container('docker') {
+        echo "Building docker image..."
+
+        sh "docker build -t ${appimage}:${apptag} ."
     }
 }
-
+    }
+}
