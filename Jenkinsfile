@@ -36,7 +36,9 @@ podTemplate(
                 checkout scm
             }
         }
-
+        stage('scan') {
+            myLibrary.scanApp()
+        }
         stage('build') {
             myLibrary.buildApp(appimage, apptag)
         }
