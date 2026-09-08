@@ -13,7 +13,8 @@ def pushApp(appimage, apptag) {
     echo "push"
 
     container('docker') {
-
+  until docker info >/dev/null 2>&1; do
+                sleep 1
         withCredentials([
             usernamePassword(
                 credentialsId: 'dockerhub',
