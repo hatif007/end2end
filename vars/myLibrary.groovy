@@ -2,6 +2,14 @@ def buildApp(appimage, apptag) {
     echo "build"
 
     container('docker') {
+
+        sh '''
+            echo "Waiting for Docker daemon..."
+            until docker info >/dev/null 2>&1; do
+                sleep 1
+            done
+        '''
+
         echo "Building docker image..."
 
         sh "docker build -t ${appimage}:${apptag} ."
@@ -13,8 +21,7 @@ def pushApp(appimage, apptag) {
     echo "push"
 
     container('docker') {
-  until docker info >/dev/null 2>&1; do
-                sleep 1
+
         withCredentials([
             usernamePassword(
                 credentialsId: 'dockerhub',
