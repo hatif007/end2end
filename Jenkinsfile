@@ -8,16 +8,18 @@ def apptag = "${env.BUILD_NUMBER}"
 podTemplate(
     cloud: 'Kubernetes',
     containers: [
-        containerTemplate(
-            name: 'jnlp',
-            image: 'jenkins/inbound-agent:latest'
-        ),
-        containerTemplate(
-            name: 'docker',
-            image: 'docker:26-dind',
-            privileged: true,
-            args: '--storage-driver=vfs'
+       containerTemplate(
+    name: 'docker',
+    image: 'docker:26-dind',
+    privileged: true,
+    args: '--storage-driver=vfs',
+    envVars: [
+        containerEnvVar(
+            key: 'DOCKER_TLS_CERTDIR',
+            value: ''
         )
+    ]
+)
     ],
     volumes: [
         emptyDirVolume(
