@@ -6,7 +6,7 @@ def appimage = "docker.io/${repo}/${appname}"
 def apptag = "${env.BUILD_NUMBER}"
 
 podTemplate(
-    cloud: 'kubernetes',
+    cloud: 'Kubernetes',
     containers: [
         containerTemplate(
             name: 'jnlp',
