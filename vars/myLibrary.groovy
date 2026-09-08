@@ -1,19 +1,33 @@
-def buildApp(appimage,apptag) {
+def buildApp(appimage, apptag) {
     echo "build"
-    container('docker') {
-                echo "Building docker image..."
 
-                sh "docker build -t ${appimage}:${apptag} ."
-                sh "docker tag ${appimage}:${apptag} ${appimage}:latest"
-            }
+    container('docker') {
+        echo "Building docker image..."
+
+        sh "docker build -t ${appimage}:${apptag} ."
+        sh "docker tag ${appimage}:${apptag} ${appimage}:latest"
+    }
 }
 
-def pushApp(appimage,apptag) {
+def pushApp(appimage, apptag) {
     echo "push"
+
     container('docker') {
-                sh "docker push ${appimage}:${apptag}"
-                sh "docker push ${appimage}:latest"
-            }
+
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'admin',
+                usernameVariable: 'DOCKER_USER',
+                passwordVariable: 'DOCKER_PASS'
+            )
+        ]) {
+
+            sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+
+            sh "docker push ${appimage}:${apptag}"
+            sh "docker push ${appimage}:latest"
+        }
+    }
 }
 
 def cleanup() {
