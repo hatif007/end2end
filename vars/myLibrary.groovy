@@ -16,7 +16,7 @@ def pushApp(appimage, apptag) {
 
         withCredentials([
             usernamePassword(
-                credentialsId: 'minikube-token',
+                credentialsId: 'dockerhub',
                 usernameVariable: 'DOCKER_USER',
                 passwordVariable: 'DOCKER_PASS'
             )
