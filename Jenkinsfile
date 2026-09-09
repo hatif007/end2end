@@ -35,6 +35,8 @@ podTemplate(
                 sh '/usr/bin/git config --global http.sslVerify false'
                 checkout scm
             }
+        stage('Create') {
+           codeQuality.sonarCreateProject(String projectKey) 
         }
         stage('scan') {
            codeQuality.scanApp()
