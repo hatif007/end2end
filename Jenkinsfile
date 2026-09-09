@@ -28,26 +28,30 @@ podTemplate(
         )
     ]
 ) {
-    node(POD_LABEL) {
+   node(POD_LABEL) {
 
-        stage('checkout') {
-            container('jnlp') {
-                sh '/usr/bin/git config --global http.sslVerify false'
-                checkout scm
-            }
-        stage('Create') {
-           codeQuality.sonarCreateProject(String projectKey) 
+    stage('checkout') {
+        container('jnlp') {
+            sh '/usr/bin/git config --global http.sslVerify false'
+            checkout scm
         }
-        stage('scan') {
-           codeQuality.scanApp()
-        }
-        stage('build') {
-            myLibrary.buildApp(appimage, apptag)
-        }
-
-        stage('push') {
-            myLibrary.pushApp(appimage, apptag)
-        }
-
     }
+
+    stage('Create') {
+        codeQuality.sonarCreateProject(env.JOB_NAME)
+    }
+
+    stage('scan') {
+        codeQuality.scanApp()
+    }
+
+    stage('build') {
+        myLibrary.buildApp(appimage, apptag)
+    }
+
+    stage('push') {
+        myLibrary.pushApp(appimage, apptag)
+    }
+
+}
 }
