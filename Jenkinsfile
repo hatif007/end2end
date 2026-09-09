@@ -42,7 +42,7 @@ podTemplate(
     }
 
     stage('scan') {
-        codeQuality.scanApp()
+        codeQuality.sonarLocalScan()
     }
 
     stage('build') {
