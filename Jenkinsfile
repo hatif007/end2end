@@ -37,7 +37,7 @@ podTemplate(
             }
         }
         stage('scan') {
-            myLibrary.scanApp()
+           codeQuality.scanApp()
         }
         stage('build') {
             myLibrary.buildApp(appimage, apptag)
