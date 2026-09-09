@@ -1,3 +1,19 @@
+def ssonarCreateProject(String projectKey) {
+    echo "scan code"
+     sonarLocalScan()
+}
+
+
+def scanApp() {
+    echo "scan code"
+     sonarLocalScan()
+}
+
+
+    container('docker') {
+          
+
+    }
 def buildApp(appimage, apptag) {
     echo "build"
 
